@@ -1,11 +1,9 @@
 import 'core-js';
 import 'reflect-metadata';
 
-const factoryMetadataKey = 'aramsay-injector:factory';
+import { InjectableConfig } from './injectable.config';
 
-export interface InjectableConfig {
-    singleton?: boolean
-}
+export const factoryMetadataKey = 'aramsay-injector:factory';
 
 export class Injector {
     static instance: Injector = new Injector();
@@ -39,7 +37,6 @@ export class Injector {
         if (!factory) {
             throw new Error(`Unknown class ${Class.name}.  Are you missing the @Injectable() decorator?`);
         }
-        
 
         return factory();
     }

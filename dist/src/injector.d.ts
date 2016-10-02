@@ -1,8 +1,7 @@
 import 'core-js';
 import 'reflect-metadata';
-export interface InjectableConfig {
-    singleton?: boolean;
-}
+import { InjectableConfig } from './injectable.config';
+export declare const factoryMetadataKey: string;
 export declare class Injector {
     static instance: Injector;
     constructor();

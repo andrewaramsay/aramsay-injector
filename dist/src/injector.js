@@ -1,7 +1,7 @@
 "use strict";
 require('core-js');
 require('reflect-metadata');
-var factoryMetadataKey = 'aramsay-injector:factory';
+exports.factoryMetadataKey = 'aramsay-injector:factory';
 var Injector = (function () {
     function Injector() {
     }
@@ -17,10 +17,10 @@ var Injector = (function () {
             instance = new (Class.bind.apply(Class, [void 0].concat(paramInstances)))();
             return instance;
         };
-        Reflect.defineMetadata(factoryMetadataKey, factory, Class);
+        Reflect.defineMetadata(exports.factoryMetadataKey, factory, Class);
     };
     Injector.prototype.get = function (Class) {
-        var factory = Reflect.getMetadata(factoryMetadataKey, Class);
+        var factory = Reflect.getMetadata(exports.factoryMetadataKey, Class);
         if (!factory) {
             factory = this.checkSafeCreate(Class);
         }
