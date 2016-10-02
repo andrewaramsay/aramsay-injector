@@ -1,0 +1,16 @@
+{
+  "name": "aramsay-injector",
+  "version": "1.0.0",
+  "description": "TypeScript metadata DI inspired by angular2 DI system",
+  "main": "index.ts",
+  "scripts": {
+    "test": "karma start"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "typescript": "^2.0.3"
+  }
+}
