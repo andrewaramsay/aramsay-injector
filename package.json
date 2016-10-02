@@ -2,8 +2,9 @@
   "name": "aramsay-injector",
   "version": "1.0.0",
   "description": "TypeScript metadata DI inspired by angular2 DI system",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
+	"build": "tsc --project tsconfig.json",
     "test": "karma start"
   },
   "author": "",

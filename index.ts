@@ -1,2 +1,2 @@
 export { Injectable } from './src/injectable.decorator';
-export { Injector } from './src/injector';
+export { Injector, InjectableConfig } from './src/injector';

@@ -1,8 +1,8 @@
-import { Injector } from './injector';
+import { Injector, InjectableConfig } from './injector';
 
-export function Injectable(): ClassDecorator {
+export function Injectable(config?: InjectableConfig): ClassDecorator {
     let injectorInstance = Injector.instance;
     return function(Class: FunctionConstructor) {
-        injectorInstance.registerType(Class);
+        injectorInstance.registerType(Class, config || {});
     }
 }
