@@ -7,7 +7,13 @@
     "build": "rimraf dist && tsc --project tsconfig.json",
     "test": "set JASMINE_CONFIG_PATH=jasmine.json&& jasmine-ts src/**/*.spec.ts"
   },
-  "author": "",
+  "keywords": [
+    "TypeScript",
+    "decorators",
+    "di",
+    "ioc"
+  ],
+  "author": "Andrew Ramsay <aramsaybusiness@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "core-js": "^2.4.1",
