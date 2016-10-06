@@ -1,9 +1,9 @@
 "use strict";
-var injector_1 = require('./injector');
+require('reflect-metadata');
+exports.injectableMetadataKey = 'aramsay-injector:injectable';
 function Injectable(config) {
-    var injectorInstance = injector_1.Injector.instance;
     return function (Class) {
-        injectorInstance.registerType(Class, config || {});
+        Reflect.defineMetadata(exports.injectableMetadataKey, config || {}, Class);
     };
 }
 exports.Injectable = Injectable;

@@ -1,5 +1,6 @@
 /// <reference path="../typings/index.d.ts" />
-import { Injector, factoryMetadataKey } from './injector';
+import 'reflect-metadata';
+import { Injector } from './injector';
 
 describe('injector', () => {
     let injector: Injector;
@@ -7,11 +8,6 @@ describe('injector', () => {
     beforeEach(() => {
         injector = new Injector();
     });
-
-    afterEach(() => {
-        Reflect.deleteMetadata(factoryMetadataKey, TestClass);
-        Reflect.deleteMetadata(factoryMetadataKey, TestClassWithDependency);
-    })
 
     it('should return an instance of a registered type', () => {
         injector.registerType(TestClass, {});
@@ -36,19 +32,6 @@ describe('injector', () => {
         expect(instance instanceof TestClassWithDependency).toBeTruthy('instance is not instance of TestClassWithDependency');
         expect(instance.testClass).toBeTruthy('instance.dep is not defined');
         expect(instance.testClass instanceof TestClass).toBeTruthy('dep is not instance of TestClass');
-    });
-
-    it('throws an error when resolving an unregistered type with dependencies', () => {
-        injector.registerType(TestClassWithDependencyGraph, {});
-        let error: Error;
-        try {
-            injector.get(TestClassWithDependencyGraph); 
-        } catch (err) {
-            error = err;
-        }
-
-        expect(error).toBeTruthy('err not thrown');
-        expect(error.message).toBe('Unknown class TestClassWithDependency.  Are you missing the @Injectable() decorator?');
     });
 
     it('returns a new instance of each dependency by default', () => {

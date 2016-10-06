@@ -1,12 +1,13 @@
-import 'core-js';
-import 'reflect-metadata';
 import { InjectableConfig } from './injectable.config';
-export declare const factoryMetadataKey: string;
+export interface ClassFactory {
+    (): any;
+}
 export declare class Injector {
-    static instance: Injector;
+    factories: Map<any, ClassFactory>;
     constructor();
     registerType(Class: any, config: InjectableConfig): void;
+    registerFactory(Class: any, factory: ClassFactory): void;
+    private registerInjectableDependencies(...parameters);
     get(Class: any): any;
-    private checkSafeCreate(Class);
     private getParameterMetadata(Class);
 }

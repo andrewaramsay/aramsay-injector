@@ -1,6 +1,7 @@
 {
   "files": [
-	  "index.ts"
+	  "index.ts",
+    "typings/index.d.ts"
   ],
   "compilerOptions": {
     "declaration": true,
