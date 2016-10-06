@@ -1,13 +1,10 @@
-import { InjectableConfig } from './injectable.config';
-export interface ClassFactory {
-    (): any;
-}
+import { FactoryToken, ClassFactory, Type, InjectableConfig } from './interfaces';
 export declare class Injector {
-    factories: Map<any, ClassFactory>;
+    factories: Map<FactoryToken, ClassFactory>;
     constructor();
-    registerType(Class: any, config: InjectableConfig): void;
-    registerFactory(Class: any, factory: ClassFactory): void;
+    registerType(Class: Type, config: InjectableConfig): void;
+    registerFactory(Class: FactoryToken, factory: ClassFactory): void;
     private registerInjectableDependencies(...parameters);
-    get(Class: any): any;
+    get(Class: FactoryToken): any;
     private getParameterMetadata(Class);
 }

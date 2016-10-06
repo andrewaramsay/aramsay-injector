@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { InjectableConfig } from './injectable.config';
+import { InjectableConfig, Type } from './interfaces';
 
 export const injectableMetadataKey = 'aramsay-injector:injectable';
 
 export function Injectable(config?: InjectableConfig): ClassDecorator {
-    return function(Class: any) {
+    return function(Class: Type) {
         Reflect.defineMetadata(injectableMetadataKey, config || {}, Class);
     }
 }

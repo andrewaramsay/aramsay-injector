@@ -1,4 +1,4 @@
 import 'reflect-metadata';
-import { InjectableConfig } from './injectable.config';
+import { InjectableConfig } from './interfaces';
 export declare const injectableMetadataKey: string;
 export declare function Injectable(config?: InjectableConfig): ClassDecorator;

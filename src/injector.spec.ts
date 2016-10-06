@@ -1,6 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
 import 'reflect-metadata';
 import { Injector } from './injector';
+import { injectOverridesMetadataKey } from './inject.decorator';
 
 describe('injector', () => {
     let injector: Injector;
@@ -59,6 +60,26 @@ describe('injector', () => {
 
         expect(instance1.testClassWithDependency).toBe(instance2.testClassWithDependency);
         expect(instance1.testClassWithDependency.testClass).toBe(instance2.testClassWithDependency.testClass);
+    });
+
+    it('allows overriding a paramter to inject with a custom token', () => {
+        let dependency = new TestClass();
+        injector.registerFactory('token', () => dependency);
+
+        Reflect.defineMetadata(injectOverridesMetadataKey, ['token'], TestClassWithDependency);
+
+        let instance: TestClassWithDependency = injector.get(TestClassWithDependency);
+
+        expect(instance.testClass).toBe(dependency);
+    });
+
+    describe('registerFactory', () => {
+        it('executes the specified factory when getting the supplied token', () => {
+            let dependency = new TestClass();
+            injector.registerFactory('token', () => dependency);
+
+            let instance = injector.get('token');
+        });
     });
 });
 

@@ -1,20 +1,17 @@
 import { Map } from 'core-js';
 
-import { InjectableConfig } from './injectable.config';
 import { injectableMetadataKey } from './injectable.decorator';
-
-export interface ClassFactory {
-    (): any;
-}
+import { injectOverridesMetadataKey } from './inject.decorator';
+import { FactoryToken, ClassFactory, Type, InjectableConfig } from './interfaces';
 
 export class Injector {
-    factories: Map<any, ClassFactory>;
+    factories: Map<FactoryToken, ClassFactory>;
     
     constructor() {
         this.factories = new Map<any, ClassFactory>();
     }
     
-    registerType(Class: any, config: InjectableConfig) {
+    registerType(Class: Type, config: InjectableConfig) {
         if (this.factories.has(Class)) {
             console.warn(`Class ${Class.name} is already registered.  Ignoring`);
             return;
@@ -23,13 +20,14 @@ export class Injector {
         let parameters = this.getParameterMetadata(Class);
         this.registerInjectableDependencies(...parameters);
         
+        let overrides: FactoryToken[] = Reflect.getMetadata(injectOverridesMetadataKey, Class) || [];
         let instance: any;
         let classFactory = () => {
             if (config.singleton && instance) {
                 return instance;
             }
             
-            var paramInstances = parameters.map(ParamClass => this.get(ParamClass));
+            var paramInstances = parameters.map((ParamClass, index) => this.get(overrides[index] || ParamClass));
             instance = new Class(...paramInstances);
             return instance;
         };
@@ -37,16 +35,15 @@ export class Injector {
         this.registerFactory(Class, classFactory);
     }
 
-    registerFactory(Class: any, factory: ClassFactory) {
+    registerFactory(Class: FactoryToken, factory: ClassFactory) {
         if (this.factories.has(Class)) {
-            console.warn(`Class ${Class.name} is already registered.  Ignoring`);
             return;
         }
 
         this.factories.set(Class, factory);
     }
     
-    private registerInjectableDependencies(...parameters: Function[]) {
+    private registerInjectableDependencies(...parameters: Type[]) {
         parameters.forEach(ParamClass => {
             let injectableConfig = Reflect.getMetadata(injectableMetadataKey, ParamClass);
             if (injectableConfig) {
@@ -55,8 +52,8 @@ export class Injector {
         });
     }
     
-    get(Class: any) {
-        if (!this.factories.has(Class)) {
+    get(Class: FactoryToken) {
+        if (!this.factories.has(Class) && typeof Class !== 'string' && typeof Class !== 'symbol') {
             this.registerType(Class, {});
         }
 
@@ -64,8 +61,8 @@ export class Injector {
         return factory();
     }
 
-    private getParameterMetadata(Class: any): Function[] {
-        let parameters: Function[] = Reflect.getMetadata('design:paramtypes', Class);
+    private getParameterMetadata(Class: Type): Type[] {
+        let parameters: Type[] = Reflect.getMetadata('design:paramtypes', Class);
         return parameters || [];
     }
 }
