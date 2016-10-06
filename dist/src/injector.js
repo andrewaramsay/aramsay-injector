@@ -9,7 +9,6 @@ var Injector = (function () {
     Injector.prototype.registerType = function (Class, config) {
         var _this = this;
         if (this.factories.has(Class)) {
-            console.warn("Class " + Class.name + " is already registered.  Ignoring");
             return;
         }
         var parameters = this.getParameterMetadata(Class);
@@ -26,11 +25,11 @@ var Injector = (function () {
         };
         this.registerFactory(Class, classFactory);
     };
-    Injector.prototype.registerFactory = function (Class, factory) {
-        if (this.factories.has(Class)) {
+    Injector.prototype.registerFactory = function (token, factory, overwrite) {
+        if (this.factories.has(token) && !overwrite) {
             return;
         }
-        this.factories.set(Class, factory);
+        this.factories.set(token, factory);
     };
     Injector.prototype.registerInjectableDependencies = function () {
         var _this = this;
@@ -45,11 +44,11 @@ var Injector = (function () {
             }
         });
     };
-    Injector.prototype.get = function (Class) {
-        if (!this.factories.has(Class) && typeof Class !== 'string' && typeof Class !== 'symbol') {
-            this.registerType(Class, {});
+    Injector.prototype.get = function (token) {
+        if (!this.factories.has(token) && typeof token !== 'string' && typeof token !== 'symbol') {
+            this.registerType(token, {});
         }
-        var factory = this.factories.get(Class);
+        var factory = this.factories.get(token);
         return factory();
     };
     Injector.prototype.getParameterMetadata = function (Class) {
