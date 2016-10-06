@@ -13,7 +13,6 @@ export class Injector {
     
     registerType(Class: Type, config: InjectableConfig) {
         if (this.factories.has(Class)) {
-            console.warn(`Class ${Class.name} is already registered.  Ignoring`);
             return;
         }
 
@@ -35,12 +34,12 @@ export class Injector {
         this.registerFactory(Class, classFactory);
     }
 
-    registerFactory(Class: FactoryToken, factory: ClassFactory) {
-        if (this.factories.has(Class)) {
+    registerFactory(token: FactoryToken, factory: ClassFactory, overwrite?: boolean) {
+        if (this.factories.has(token) && !overwrite) {
             return;
         }
 
-        this.factories.set(Class, factory);
+        this.factories.set(token, factory);
     }
     
     private registerInjectableDependencies(...parameters: Type[]) {
@@ -52,12 +51,12 @@ export class Injector {
         });
     }
     
-    get(Class: FactoryToken) {
-        if (!this.factories.has(Class) && typeof Class !== 'string' && typeof Class !== 'symbol') {
-            this.registerType(Class, {});
+    get(token: FactoryToken) {
+        if (!this.factories.has(token) && typeof token !== 'string' && typeof token !== 'symbol') {
+            this.registerType(token, {});
         }
 
-        let factory = this.factories.get(Class);
+        let factory = this.factories.get(token);
         return factory();
     }
 
