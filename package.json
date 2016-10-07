@@ -4,7 +4,7 @@
   "description": "TypeScript metadata DI inspired by angular2 DI system",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.json",
+    "build": "rimraf dist && npm test && tsc --project tsconfig.json",
     "test": "set JASMINE_CONFIG_PATH=jasmine.json&& jasmine-ts src/**/*.spec.ts",
     "autotest": "nodemon --watch src/**/*.* --exec npm test"
   },
