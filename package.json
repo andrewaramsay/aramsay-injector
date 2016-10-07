@@ -1,6 +1,6 @@
 {
   "name": "aramsay-injector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "TypeScript metadata DI inspired by angular2 DI system",
   "main": "dist/index.js",
   "scripts": {
@@ -20,16 +20,16 @@
     "type": "git",
     "url": "https://github.com/andrewaramsay/aramsay-injector.git"
   },
-  "dependencies": {
-    "core-js": "^2.4.1",
-    "reflect-metadata": "^0.1.8",
-    "typescript": "^2.0.3"
-  },
   "devDependencies": {
     "jasmine": "^2.5.2",
     "jasmine-node": "^1.14.5",
     "jasmine-ts": "0.0.3",
     "nodemon": "^1.10.2",
     "rimraf": "^2.5.4"
+  },
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "typescript": "^2.0.3"
   }
 }
