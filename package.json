@@ -4,8 +4,8 @@
   "description": "TypeScript metadata DI inspired by angular2 DI system",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf dist && npm test && tsc --project tsconfig.json",
-    "test": "set JASMINE_CONFIG_PATH=jasmine.json&& jasmine-ts src/**/*.spec.ts",
+    "build": "npm test && rimraf dist && tsc --project tsconfig.json",
+    "test": "cross-env JASMINE_CONFIG_PATH=jasmine.json jasmine-ts src/**/*.spec.ts",
     "autotest": "nodemon --watch src/**/*.* --exec npm test"
   },
   "keywords": [
@@ -21,6 +21,7 @@
     "url": "https://github.com/andrewaramsay/aramsay-injector.git"
   },
   "devDependencies": {
+    "cross-env": "^3.1.2",
     "jasmine": "^2.5.2",
     "jasmine-node": "^1.14.5",
     "jasmine-ts": "0.0.3",
