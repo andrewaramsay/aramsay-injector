@@ -1,7 +1,7 @@
-/// <reference path="../typings/index.d.ts" />
+/// <reference path="../../typings/index.d.ts" />
 import 'reflect-metadata';
 import { Inject, injectOverridesMetadataKey } from './inject.decorator';
-import { FactoryToken } from './interfaces';
+import { FactoryToken } from '../interfaces';
 
 describe('Inject', () => {
     beforeEach(() => {

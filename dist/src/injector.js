@@ -1,7 +1,6 @@
 "use strict";
 var core_js_1 = require('core-js');
-var injectable_decorator_1 = require('./injectable.decorator');
-var inject_decorator_1 = require('./inject.decorator');
+var decorators_1 = require('./decorators');
 var Injector = (function () {
     function Injector() {
         this.factories = new core_js_1.Map();
@@ -13,7 +12,7 @@ var Injector = (function () {
         }
         var parameters = this.getParameterMetadata(Class);
         this.registerInjectableDependencies.apply(this, parameters);
-        var overrides = Reflect.getMetadata(inject_decorator_1.injectOverridesMetadataKey, Class) || [];
+        var overrides = Reflect.getMetadata(decorators_1.injectOverridesMetadataKey, Class) || [];
         var instance;
         var classFactory = function () {
             if (config.singleton && instance) {
@@ -38,7 +37,7 @@ var Injector = (function () {
             parameters[_i - 0] = arguments[_i];
         }
         parameters.forEach(function (ParamClass) {
-            var injectableConfig = Reflect.getMetadata(injectable_decorator_1.injectableMetadataKey, ParamClass);
+            var injectableConfig = Reflect.getMetadata(decorators_1.injectableMetadataKey, ParamClass);
             if (injectableConfig) {
                 _this.registerType(ParamClass, injectableConfig);
             }

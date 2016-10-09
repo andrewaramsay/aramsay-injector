@@ -1,7 +1,6 @@
 import { Map } from 'core-js';
 
-import { injectableMetadataKey } from './injectable.decorator';
-import { injectOverridesMetadataKey } from './inject.decorator';
+import { injectableMetadataKey, injectOverridesMetadataKey } from './decorators';
 import { FactoryToken, ClassFactory, Type, InjectableConfig } from './interfaces';
 
 export class Injector {

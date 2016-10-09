@@ -1,7 +1,7 @@
 /// <reference path="../typings/index.d.ts" />
 import 'reflect-metadata';
 import { Injector } from './injector';
-import { injectOverridesMetadataKey } from './inject.decorator';
+import { injectOverridesMetadataKey } from './decorators';
 
 describe('injector', () => {
     let injector: Injector;
