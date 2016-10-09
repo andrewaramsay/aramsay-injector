@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { InjectableConfig, Type } from '../interfaces';
 
 export const injectableMetadataKey = 'aramsay-injector:injectable';

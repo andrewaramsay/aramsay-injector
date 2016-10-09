@@ -1,5 +1,4 @@
 "use strict";
-require('reflect-metadata');
 exports.injectableMetadataKey = 'aramsay-injector:injectable';
 function Injectable(config) {
     return function (Class) {

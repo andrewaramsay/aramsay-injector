@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { Injector } from './injector';
 export declare class MetadataDefiner {
     private injector;

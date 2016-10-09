@@ -1,4 +1,3 @@
-import 'reflect-metadata';
 import { InjectableConfig, FactoryToken, Type } from '../interfaces';
 
 export const injectOverridesMetadataKey = 'aramsay-injector:overrides';

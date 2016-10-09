@@ -1,5 +1,4 @@
 "use strict";
-require('reflect-metadata');
 var MetadataDefiner = (function () {
     function MetadataDefiner(injector) {
         this.injector = injector;

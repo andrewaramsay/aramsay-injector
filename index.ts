@@ -1,5 +1,7 @@
 import 'core-js';
-import 'reflect-metadata';
+if (!Reflect.defineMetadata) {
+	require('reflect-metadata');
+}
 
 export * from './src/decorators';
 export * from './src/interfaces';
