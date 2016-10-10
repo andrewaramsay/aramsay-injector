@@ -48,27 +48,6 @@ describe('MetadataDefiner', () => {
             expect(threw).toBe(true);
         });
     });
-
-    describe('with injector', () => {
-        let injector: Injector;
-
-        beforeEach(() => {
-            injector = jasmine.createSpyObj<Injector>('injector', ['registerType']);
-            target = new MetadataDefiner(injector);
-        });
-
-        it('registers the type with the injector if it is supplied', () => {
-            target.defineDependencies(SampleClass, [SampleClass2, SampleClass3]);
-
-            expect(injector.registerType).toHaveBeenCalledWith(SampleClass, { singleton: undefined });
-        });
-
-        it('registers the type as a singleton with the injector if the flag is true', () => {
-            target.defineDependencies(SampleClass, [SampleClass2, SampleClass3], true);
-
-            expect(injector.registerType).toHaveBeenCalledWith(SampleClass, { singleton: true });
-        });
-    });
 });
 
 class SampleClass {

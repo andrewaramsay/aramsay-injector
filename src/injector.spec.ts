@@ -2,6 +2,7 @@
 import 'reflect-metadata';
 import { Injector } from './injector';
 import { injectOverridesMetadataKey } from './decorators';
+import { InstanceMode } from './interfaces';
 
 describe('injector', () => {
     let injector: Injector;
@@ -48,9 +49,9 @@ describe('injector', () => {
         expect(instance1.testClassWithDependency.testClass).not.toBe(instance2.testClassWithDependency.testClass);
     });
 
-    it('returns a single instance of each dependency that is specified to be a singleton', () => {
+    it('returns a single instance of each dependency that is specified to use instance mode SingleInstance', () => {
         injector.registerType(TestClass, {});
-        injector.registerType(TestClassWithDependency, { singleton: true });
+        injector.registerType(TestClassWithDependency, { instanceMode: InstanceMode.SingleInstance });
         injector.registerType(TestClassWithDependencyGraph, {});
 
         let instance1: TestClassWithDependencyGraph = injector.get(TestClassWithDependencyGraph);
@@ -60,6 +61,19 @@ describe('injector', () => {
 
         expect(instance1.testClassWithDependency).toBe(instance2.testClassWithDependency);
         expect(instance1.testClassWithDependency.testClass).toBe(instance2.testClassWithDependency.testClass);
+    });
+
+    it('returns a single instance per resolution for each dependency that is specified to use instance mode InstancePerResolution', () => {
+        injector.registerType(TestClass, { instanceMode: InstanceMode.InstancePerResolution });
+        injector.registerType(TestClassWithDependency, { instanceMode: InstanceMode.InstancePerDependency });
+        injector.registerType(TestClassWithDependencyGraph, { instanceMode: InstanceMode.InstancePerDependency });
+        
+        let instance1: TestClassWithDependencyGraph = injector.get(TestClassWithDependencyGraph);
+        let instance2: TestClassWithDependencyGraph = injector.get(TestClassWithDependencyGraph);
+        
+        expect(instance1.testClass).toBe(instance1.testClassWithDependency.testClass);
+        expect(instance2.testClass).toBe(instance2.testClassWithDependency.testClass);
+        expect(instance1.testClass).not.toBe(instance2.testClass);
     });
 
     it('allows overriding a paramter to inject with a custom token', () => {
@@ -96,5 +110,5 @@ class TestClassWithDependency {
 
 @decorator
 class TestClassWithDependencyGraph {
-    constructor(public testClassWithDependency: TestClassWithDependency) {}
+    constructor(public testClassWithDependency: TestClassWithDependency, public testClass: TestClass) {}
 }

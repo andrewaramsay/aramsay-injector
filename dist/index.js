@@ -7,5 +7,6 @@ if (!Reflect.defineMetadata) {
     require('reflect-metadata');
 }
 __export(require('./src/decorators'));
+__export(require('./src/interfaces'));
 __export(require('./src'));
 //# sourceMappingURL=index.js.map

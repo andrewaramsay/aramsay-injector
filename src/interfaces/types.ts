@@ -9,6 +9,12 @@ export interface Type {
     new(...args: any[]): any;
 }
 
+export enum InstanceMode {
+    SingleInstance,
+    InstancePerDependency,
+    InstancePerResolution
+}
+
 export interface InjectableConfig {
-    singleton?: boolean
+    instanceMode?: InstanceMode;
 }

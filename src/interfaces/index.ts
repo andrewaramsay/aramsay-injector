@@ -1,1 +1,1 @@
-export { ClassFactory, FactoryToken, InjectableConfig, Type } from './types';
+export { ClassFactory, FactoryToken, InjectableConfig, Type, InstanceMode } from './types';

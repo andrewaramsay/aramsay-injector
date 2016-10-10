@@ -1,9 +1,8 @@
 "use strict";
 var MetadataDefiner = (function () {
-    function MetadataDefiner(injector) {
-        this.injector = injector;
+    function MetadataDefiner() {
     }
-    MetadataDefiner.prototype.defineDependencies = function (Class, dependencies, singleton) {
+    MetadataDefiner.prototype.defineDependencies = function (Class, dependencies) {
         var parameters = Reflect.getMetadata('design:paramtypes', Class);
         if (parameters) {
             parameters.forEach(function (p, index) {
@@ -14,9 +13,6 @@ var MetadataDefiner = (function () {
             return;
         }
         Reflect.defineMetadata('design:paramtypes', dependencies, Class);
-        if (this.injector) {
-            this.injector.registerType(Class, { singleton: singleton });
-        }
     };
     return MetadataDefiner;
 }());

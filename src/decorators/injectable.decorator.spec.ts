@@ -10,7 +10,6 @@ describe('injectable', () => {
         let metadata = Reflect.getMetadata(injectableMetadataKey, TestClass);
         
         expect(metadata).toBeTruthy();
-        expect(metadata.singleton).toBeFalsy();
     });
 
     it('should pass config to registerType', () => {

@@ -1,12 +1,8 @@
-import { Injector } from './injector';
+import { Type } from './interfaces';
 
 export class MetadataDefiner {
-    constructor(
-        private injector?: Injector) {
-    }
-    
-    defineDependencies(Class: any, dependencies: any[], singleton?: boolean) {
-        let parameters: any[] = Reflect.getMetadata('design:paramtypes', Class);
+    defineDependencies(Class: Type, dependencies: Type[]) {
+        let parameters: Type[] = Reflect.getMetadata('design:paramtypes', Class);
         if (parameters) {
             parameters.forEach((p, index) => {
                 if (dependencies[index] !== p) {
@@ -18,9 +14,6 @@ export class MetadataDefiner {
         }
 
         Reflect.defineMetadata('design:paramtypes', dependencies, Class);
-
-        if (this.injector) {
-            this.injector.registerType(Class, { singleton });
-        }
     }
 }
+

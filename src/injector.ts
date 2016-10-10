@@ -1,13 +1,14 @@
 import { Map } from 'core-js';
 
 import { injectableMetadataKey, injectOverridesMetadataKey } from './decorators';
-import { FactoryToken, ClassFactory, Type, InjectableConfig } from './interfaces';
+import { InstanceManager, SingletonInstanceManager, PerResolutionInstanceManager, PerDependencyInstanceManager, AnonymousInstanceManager } from './instance-managers';
+import { FactoryToken, ClassFactory, Type, InjectableConfig, InstanceMode } from './interfaces';
 
 export class Injector {
-    factories: Map<FactoryToken, ClassFactory>;
+    factories: Map<FactoryToken, InstanceManager>;
     
     constructor() {
-        this.factories = new Map<any, ClassFactory>();
+        this.factories = new Map<any, InstanceManager>();
     }
     
     registerType(Class: Type, config: InjectableConfig) {
@@ -19,26 +20,22 @@ export class Injector {
         this.registerInjectableDependencies(...parameters);
         
         let overrides: FactoryToken[] = Reflect.getMetadata(injectOverridesMetadataKey, Class) || [];
-        let instance: any;
-        let classFactory = () => {
-            if (config.singleton && instance) {
-                return instance;
-            }
-            
-            var paramInstances = parameters.map((ParamClass, index) => this.get(overrides[index] || ParamClass));
-            instance = new Class(...paramInstances);
-            return instance;
-        };
 
-        this.registerFactory(Class, classFactory);
+        let instanceManager: InstanceManager;
+        
+        if (config.instanceMode === InstanceMode.SingleInstance) {
+            instanceManager = new SingletonInstanceManager(Class, parameters, overrides, token => this.getPrivate(token))
+        } else if (config.instanceMode === InstanceMode.InstancePerResolution) {
+            instanceManager = new PerResolutionInstanceManager(Class, parameters, overrides, token => this.getPrivate(token))
+        } else {
+            instanceManager = new PerDependencyInstanceManager(Class, parameters, overrides, token => this.getPrivate(token))
+        }
+        this.registerFactory(Class, instanceManager);
     }
 
-    registerFactory(token: FactoryToken, factory: ClassFactory, overwrite?: boolean) {
-        if (this.factories.has(token) && !overwrite) {
-            return;
-        }
-
-        this.factories.set(token, factory);
+    private getParameterMetadata(Class: Type): Type[] {
+        let parameters: Type[] = Reflect.getMetadata('design:paramtypes', Class);
+        return parameters || [];
     }
     
     private registerInjectableDependencies(...parameters: Type[]) {
@@ -49,19 +46,43 @@ export class Injector {
             }
         });
     }
-    
-    get(token: FactoryToken) {
-        if (!this.factories.has(token) && typeof token !== 'string' && typeof token !== 'symbol') {
-            this.registerType(token, {});
+
+    registerFactory(token: FactoryToken, instanceManager: InstanceManager, overwrite?: boolean): void;
+    registerFactory(token: FactoryToken, factory: ClassFactory, overwrite?: boolean): void;
+    registerFactory(token: FactoryToken, factory: ClassFactory | InstanceManager, overwrite?: boolean) {
+        if (this.factories.has(token) && !overwrite) {
+            return;
         }
 
-        let factory = this.factories.get(token);
-        return factory();
+        let instanceManager: InstanceManager;
+        if (factory instanceof InstanceManager) {
+            instanceManager = factory;
+        } else {
+            instanceManager = new AnonymousInstanceManager(factory);
+        }
+
+        this.factories.set(token, instanceManager);
     }
 
-    private getParameterMetadata(Class: Type): Type[] {
-        let parameters: Type[] = Reflect.getMetadata('design:paramtypes', Class);
-        return parameters || [];
+    get(token: FactoryToken): any {
+        if (!this.factories.has(token) && typeof token !== 'string' && typeof token !== 'symbol') {
+            this.registerType(token, { instanceMode: InstanceMode.InstancePerDependency });
+        }
+
+        this.resetFactories();
+        return this.getPrivate(token);
+    }
+
+    private resetFactories(): void {
+        this.factories.forEach((instanceManager) => {
+            if (instanceManager instanceof PerResolutionInstanceManager) {
+                instanceManager.reset();
+            }
+        });
+    }
+
+    private getPrivate(token: FactoryToken): any {
+        let factory: InstanceManager = this.factories.get(token);
+        return factory.getInstance();
     }
 }
-

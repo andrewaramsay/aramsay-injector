@@ -1,6 +1,4 @@
-import { Injector } from './injector';
+import { Type } from './interfaces';
 export declare class MetadataDefiner {
-    private injector;
-    constructor(injector?: Injector);
-    defineDependencies(Class: any, dependencies: any[], singleton?: boolean): void;
+    defineDependencies(Class: Type, dependencies: Type[]): void;
 }
